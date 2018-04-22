@@ -11,10 +11,13 @@ import java.util.ArrayList;
 
 
 public class FdroidReader {
-    private ArrayList<String> repositoryList = new ArrayList<String>();
+    private ArrayList<App> repositoryList = new ArrayList<App>();
     private String url = "https://f-droid.org/repo/index.xml";
+    private App app = new App();
+    private Element elemento = null;
+    private NodeList dado = null;
 
-    public ArrayList<String> getRepositoryApps(long qtdApps){
+    public ArrayList<App> getRepositoryApps(long qtdApps){
         try{
             DocumentBuilderFactory bf = DocumentBuilderFactory.newInstance();
             bf.setNamespaceAware(true);
@@ -24,13 +27,20 @@ public class FdroidReader {
             NodeList nodeL = doc.getElementsByTagName("application");
 
             for(int i=0; i < qtdApps; i++){
-                Element elemento = (Element) nodeL.item(i);
-                NodeList dado = elemento.getElementsByTagName("source");
-                repositoryList.add(dado.item(0).getTextContent());
+                elemento = (Element) nodeL.item(i);
+                dado = elemento.getElementsByTagName("id");
+                app.setAppId(dado.item(0).getTextContent());
+
+                dado = elemento.getElementsByTagName("source");
+                app.setRepository(dado.item(0).getTextContent());
+
+                dado = elemento.getElementsByTagName("license");
+                app.setAppLicense(dado.item(0).getTextContent());
+                repositoryList.add(app);
             }
         }
         catch(Exception ex){
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
 
         return repositoryList;

@@ -1,8 +1,7 @@
 package output;
 
-import models.FdroidReader;
-import models.GitService;
-import models.GitHistoryBadSmellMiner;
+import models.*;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 import org.eclipse.jgit.lib.Repository;
@@ -22,11 +21,13 @@ public class Main {
 
         try{
             FdroidReader fd = new FdroidReader();
-            ArrayList<String> repositorios = fd.getRepositoryApps(qtdApps);
+            ArrayList<App> repositorios = fd.getRepositoryApps(qtdApps);
 
-            for(String rep : repositorios){
-                System.out.println(rep);
-                Repository r = gitService.cloneIfNotExists(pathClone,rep );
+            for(App rep : repositorios){
+                System.out.println(rep.getAppId());
+                Repository r = gitService.cloneIfNotExists(pathClone + rep.getAppId(),rep.getRepository() );
+                //Captura Reviews
+                Reviews.getreviewsApp(rep.getAppId(),pathClone);
             }
         }
         catch(Exception ex){

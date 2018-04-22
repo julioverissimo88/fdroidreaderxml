@@ -27,8 +27,6 @@ public class GitService implements GitServiceInterface {
         File folder = new File(projectPath);
         Repository repository;
 
-
-
         if(folder.exists()) {
             RepositoryBuilder builder = new RepositoryBuilder();
             repository = builder
